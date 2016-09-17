@@ -181,7 +181,9 @@ export const updateEntity = (entity, {
         method: 'PATCH',
         body: JSON.stringify({
           data: entity
-        })
+        }),
+        // TODO: Creditials can be 'include' or 'omit', should probably be 'omit' by default to then be turned on where needed.
+        credentials: 'include'
       }).then(json => {
         dispatch(apiUpdated(json.data));
         onSuccess(json);
