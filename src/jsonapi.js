@@ -65,7 +65,8 @@ export const uploadFile = (file, {
 
     const options = {
       method: 'POST',
-      body: data
+      body: data,
+      credentials: 'include',
     };
 
     return fetch(url, options)
