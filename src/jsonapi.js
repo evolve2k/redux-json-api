@@ -1,6 +1,7 @@
 import { createAction, handleActions } from 'redux-actions';
 import 'isomorphic-fetch';
 import Imm from 'immutable';
+import 'humps';
 
 import {
   removeEntityFromState,
@@ -101,7 +102,6 @@ export const createEntity = (entity, {
 
   return (dispatch, getState) => {
     dispatch(apiWillCreate(entity));
-
     const { host: apiHost, path: apiPath, headers } = getState().api.endpoint;
     const endpoint = `${apiHost}${apiPath}/${entity.type}`;
 
@@ -171,9 +171,9 @@ export const updateEntity = (entity, {
 
   return (dispatch, getState) => {
     dispatch(apiWillUpdate(entity));
-
     const { host: apiHost, path: apiPath, headers } = getState().api.endpoint;
-    const endpoint = `${apiHost}${apiPath}/${entity.type}/${entity.id}`;
+    const dasherizedPath = humps.decamelize(entity.type, { separator: '-' });
+    const endpoint = `${apiHost}${apiPath}/${dasherizedPath}/${entity.id}`;
 
     return new Promise((resolve, reject) => {
       apiRequest(endpoint, {
@@ -210,7 +210,8 @@ export const deleteEntity = (entity, {
     dispatch(apiWillDelete(entity));
 
     const { host: apiHost, path: apiPath, headers } = getState().api.endpoint;
-    const endpoint = `${apiHost}${apiPath}/${entity.type}/${entity.id}`;
+    const dasherizedPath = humps.decamelize(entity.type, { separator: '-' });
+    const endpoint = `${apiHost}${apiPath}/${dasherizedPath}/${entity.id}`;
 
     return new Promise((resolve, reject) => {
       apiRequest(endpoint, {
